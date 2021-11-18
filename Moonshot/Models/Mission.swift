@@ -28,13 +28,21 @@ struct Mission: Codable, Identifiable {
     return "apollo\(id)"
   }
 
-  var formattedLaunchDate: String {
+  private static func formatLaunchDate(launchDate: Date?, dateStyle: DateFormatter.Style) -> String {
     /// # With guard, `unwrappedLaunchDate` can be used outside the if/else scope
     guard let unwrappedLaunchDate = launchDate else {
       return "N/A"
     }
     let formatter = DateFormatter()
-    formatter.dateStyle = .medium
+    formatter.dateStyle = dateStyle
     return formatter.string(from: unwrappedLaunchDate)
+  }
+
+  var formattedShortLaunchDate: String {
+    return Mission.formatLaunchDate(launchDate: launchDate, dateStyle: DateFormatter.Style.medium)
+  }
+
+  var formattedLongLaunchDate: String {
+    return Mission.formatLaunchDate(launchDate: launchDate, dateStyle: DateFormatter.Style.long)
   }
 }

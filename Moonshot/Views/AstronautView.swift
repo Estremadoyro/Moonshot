@@ -7,23 +7,29 @@
 
 import SwiftUI
 
+extension Image {
+  func applyAstronautImageStyle() -> some View {
+    return self
+      .resizable()
+      .scaledToFit()
+      .clipShape(RoundedRectangle(cornerRadius: 15))
+      .shadow(color: Color.white, radius: 5)
+      .padding([.horizontal, .top])
+  }
+}
+
 struct AstronautView: View {
   let astronaut: Astronaut
+  let role: String
+
   var body: some View {
     ScrollView {
       VStack {
         Image(astronaut.id)
-          .resizable()
-          .scaledToFit()
-          .clipShape(RoundedRectangle(cornerRadius: 15))
-          .shadow(color: Color.white, radius: 5)
-          .padding([.horizontal, .top])
+          .applyAstronautImageStyle()
 
         VStack(alignment: .leading) {
-          Rectangle()
-            .frame(height: 2)
-            .foregroundColor(Color.lightBackground)
-            .padding(.vertical)
+          CustomSeparatorView()
           Text(astronaut.name)
             .font(.title.bold())
           Text(astronaut.description)
@@ -31,7 +37,7 @@ struct AstronautView: View {
         .padding()
       }
     }
-    .navigationTitle(astronaut.name)
+    .navigationTitle(self.role)
     .navigationBarTitleDisplayMode(.inline)
     .background(Color.darkBackground.ignoresSafeArea())
   }

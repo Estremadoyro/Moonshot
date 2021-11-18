@@ -38,7 +38,7 @@ struct ContentView: View {
                     .font(.headline)
                     .foregroundColor(Color.white)
                   /// # `mission.launchDate` is NOT `String`, it's a `Date` so it can't conform a `Text`
-                  Text(mission.formattedLaunchDate)
+                  Text(mission.formattedShortLaunchDate)
                     .font(.caption)
                     .foregroundColor(Color.white.opacity(0.5))
                 }
