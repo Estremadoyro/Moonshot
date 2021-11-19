@@ -13,52 +13,26 @@ struct ContentView: View {
   let astronauts: [String: Astronaut] = Bundle.main.decode("astronauts.json") ///
   let missions: [Mission] = Bundle.main.decode("missions.json")
 
-  /// # `Adaptive` layout
-  let columns = [
-    GridItem(.adaptive(minimum: 180, maximum: .infinity))
-  ]
+  /// # `Toolbar` state
+  @StateObject var toolBarState = ToolbarState()
 
   var body: some View {
     NavigationView {
-      ScrollView(.vertical) {
-        LazyVGrid(columns: self.columns) {
-          /// # Missions is @Identifiable so it doesn't need to specify an id
-          ForEach(missions) { mission in
-            NavigationLink {
-              MissionView(mission: mission, astronauts: astronauts)
-            } label: {
-              VStack {
-                Image(mission.image)
-                  .resizable()
-                  .scaledToFit()
-                  .frame(width: 100, height: 100)
-                  .padding()
-                VStack {
-                  Text(mission.displayName)
-                    .font(.headline)
-                    .foregroundColor(Color.white)
-                  /// # `mission.launchDate` is NOT `String`, it's a `Date` so it can't conform a `Text`
-                  Text(mission.formattedShortLaunchDate)
-                    .font(.caption)
-                    .foregroundColor(Color.white.opacity(0.5))
-                }
-                .padding(.vertical)
-                /// # Will increate the width to fit the `GridItem's`
-                .frame(maxWidth: .infinity)
-                .background(Color.lightBackground)
-              }
-              .clipShape(RoundedRectangle(cornerRadius: 10))
-              .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.lightBackground))
-            }
-          }
+      Group {
+        if toolBarState.isGridStyle {
+          MissionsGridView(astronauts: astronauts, missions: missions, toolBarState: toolBarState)
         }
-        .padding([.horizontal, .bottom])
+        else if !toolBarState.isGridStyle {
+          MissionsListView(astronauts: astronauts, missions: missions, toolBarState: toolBarState)
+        }
       }
-      .navigationTitle("Moonshot")
-      /// # We must specify the bg witll `ignoreSafeArea`
-      .background(Color.darkBackground.ignoresSafeArea())
-      /// # Set the views theme
-      .preferredColorScheme(.dark)
     }
+    .preferredColorScheme(.dark)
+  }
+}
+
+struct ContentView_Previews: PreviewProvider {
+  static var previews: some View {
+    ContentView()
   }
 }
